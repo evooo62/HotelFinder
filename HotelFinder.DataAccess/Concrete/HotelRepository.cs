@@ -1,0 +1,70 @@
+﻿using HotelFinder.DataAccess.Abstract;
+using HotelFinder.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace HotelFinder.DataAccess.Concrete
+{
+    public class HotelRepository : IHotelRepository
+    {
+        public Hotel CreateHotel(Hotel hotel)
+        {
+            using (var hotelDbContext = new HotelDbContext())
+            {
+                hotelDbContext.Hotels.Add(hotel);
+                hotelDbContext.SaveChanges();
+                return hotel;
+            }
+        }
+
+        public void DeleteHotel(int id)
+        {
+            using (var hotelDbContext = new HotelDbContext())
+            {
+                var deletedHotel = GetByHotelId(id);
+                hotelDbContext.Hotels.Remove(deletedHotel);
+                hotelDbContext.SaveChanges();
+
+            }
+        }
+
+        public List<Hotel> GetAllHotels()
+        {
+
+            using (var hotelDbContext = new HotelDbContext())
+            {
+                return hotelDbContext.Hotels.ToList();
+            }
+        }
+
+        public Hotel GetByHotelId(int id)
+        {
+            using (var hotelDbContext = new HotelDbContext())
+            {
+                return hotelDbContext.Hotels.Find(id);
+            }
+        }
+
+        public Hotel GetByHotelName(string name)
+        {
+          using(var hotelDbContext = new HotelDbContext())
+            {
+                return hotelDbContext.Hotels.FirstOrDefault(x => x.Name.ToLower() == name.ToLower());
+               
+            }
+        }
+
+        public Hotel UpdateHotel(Hotel hotel)
+        {
+            using (var hotelDbContext = new HotelDbContext())
+            {
+                hotelDbContext.Hotels.Update(hotel);
+                hotelDbContext.SaveChanges();
+                return hotel;
+            }
+        }
+    }
+
+}
